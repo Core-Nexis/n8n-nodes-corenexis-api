@@ -1,0 +1,18 @@
+{
+	"node": "@corenexis/n8n-nodes-corenexis-api.corenexisApi",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Development", "Data & Storage", "Utility"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/Core-Nexis/n8n-nodes-corenexis-api?tab=readme-ov-file#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/Core-Nexis/n8n-nodes-corenexis-api?tab=readme-ov-file"
+			}
+		]
+	}
+}
