@@ -20,6 +20,33 @@ export const CORENEXIS_USER_AGENT =
 /** Rendering, OCR and image work can take a while; the API itself stops at about 90 seconds. */
 export const REQUEST_TIMEOUT_MS = 120_000;
 
+/**
+ * Builds the node error for a refused call, using the API's own explanation
+ * (for example which option the plan does not allow) as the message.
+ */
+function apiError(ctx: IExecuteFunctions, error: unknown, itemIndex: number): NodeApiError {
+	const err = error as IDataObject & { response?: IDataObject; cause?: IDataObject };
+	const response = (err.response ?? (err.cause as IDataObject | undefined)?.response) as
+		| IDataObject
+		| undefined;
+	let body: unknown = response?.data ?? response?.body ?? err.error;
+	if (body instanceof ArrayBuffer || Buffer.isBuffer(body))
+		body = Buffer.from(body as ArrayBuffer).toString('utf8');
+	if (typeof body === 'string') {
+		try {
+			body = JSON.parse(body);
+		} catch {
+			body = undefined;
+		}
+	}
+	const parsed = (body ?? {}) as IDataObject;
+	const message = (parsed.message ?? parsed.error) as string | undefined;
+	return new NodeApiError(ctx.getNode(), error as JsonObject, {
+		itemIndex,
+		...(message ? { message, description: parsed.code ? String(parsed.code) : undefined } : {}),
+	});
+}
+
 /** One authenticated call to the Corenexis API. Returns the parsed JSON body. */
 export async function corenexisApiRequest(
 	this: IExecuteFunctions,
@@ -49,7 +76,7 @@ export async function corenexisApiRequest(
 			options,
 		)) as IDataObject;
 	} catch (error) {
-		throw new NodeApiError(this.getNode(), error as JsonObject, { itemIndex });
+		throw apiError(this, error, itemIndex);
 	}
 }
 
@@ -83,7 +110,7 @@ export async function corenexisApiBinaryRequest(
 		)) as { body: ArrayBuffer; headers: IDataObject };
 		return { data: Buffer.from(response.body), headers: response.headers ?? {} };
 	} catch (error) {
-		throw new NodeApiError(this.getNode(), error as JsonObject, { itemIndex });
+		throw apiError(this, error, itemIndex);
 	}
 }
 
