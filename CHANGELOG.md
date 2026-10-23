@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Published from GitHub Actions with an npm provenance statement.
+- Error messages show the API's own explanation, for example which option the plan does not allow.
+
 ## 0.1.0
 
 First release.

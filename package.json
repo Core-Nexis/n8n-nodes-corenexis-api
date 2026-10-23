@@ -1,6 +1,6 @@
 {
 	"name": "@corenexis/n8n-nodes-corenexis-api",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "n8n community node for the Corenexis API: Markdown and HTML to PDF, image and PDF OCR, email validation, disposable email detection, image conversion, image hosting, QR codes and barcodes.",
 	"license": "MIT",
 	"homepage": "https://github.com/Core-Nexis/n8n-nodes-corenexis-api#readme",
